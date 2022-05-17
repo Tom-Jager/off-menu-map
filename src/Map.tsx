@@ -4,21 +4,22 @@ import { isLatLngLiteral } from "@googlemaps/typescript-guards";
 
 interface MapProps extends google.maps.MapOptions {
   style: { [key: string]: string };
-  onClick?: (e: google.maps.MapMouseEvent) => void;
-  onIdle?: (map: google.maps.Map) => void;
+  userPosition?: {lat: number, lng: number};
+  openRestaurant?: string;
+  mapOptions: google.maps.MapOptions
 }
 
 const Map: React.FC<MapProps> = ({
-  onClick,
-  onIdle,
-  children,
   style,
-  ...options
+  children,
+  userPosition,
+  openRestaurant,
+  mapOptions
 }) => {
   // [START maps_react_map_component_add_map_hooks]
   const ref = React.useRef<HTMLDivElement>(null);
   const [map, setMap] = React.useState<google.maps.Map>();
-
+  
   React.useEffect(() => {
     if (ref.current && !map) {
       setMap(new window.google.maps.Map(ref.current, {}));
@@ -31,11 +32,16 @@ const Map: React.FC<MapProps> = ({
   // see discussion in https://github.com/googlemaps/js-samples/issues/946
   useDeepCompareEffectForMaps(() => {
     if (map) {
-      map.setOptions(options);
+      map.setOptions(mapOptions);
     }
-  }, [map, options]);
+  }, [map, mapOptions]);
   // [END maps_react_map_component_options_hook]
 
+  React.useEffect(() => {
+    if(userPosition && (openRestaurant === "userLocation" || openRestaurant === "userLocationFlip") && map){
+      map.panTo(userPosition)
+    }
+  }, [userPosition, openRestaurant, map])
   // [START maps_react_map_component_return]
   return (
     <>

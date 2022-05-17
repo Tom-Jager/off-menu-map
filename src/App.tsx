@@ -89,8 +89,7 @@ const App: React.VFC = () => {
   // [START maps_react_map_component_app_state]
   const [s3Data, setS3Data] = React.useState<S3Data>(null);
   const [openRestaurant, setOpenRestaurant] = React.useState<string>("");
-  const [userLocation, setUserLocation] = React.useState<{ lat: number, lng: number } | null>(null)
-  const [center, setCenter] = React.useState<{ lat: number, lng: number }>(londonLatLng)
+  const [userLocation, setUserLocation] = React.useState<{ lat: number, lng: number } | undefined>(undefined)
 
   React.useEffect(() => {
     if (s3Data == null) {
@@ -99,8 +98,8 @@ const App: React.VFC = () => {
   })
 
   React.useEffect(() => {
-    if (userLocation == null) {
-      getUserLocation((lat, lng) => setUserLocation({ lat: lat, lng: lng }), () => { setUserLocation(null) });
+    if (userLocation === undefined) {
+      getUserLocation((lat, lng) => setUserLocation({ lat: lat, lng: lng }), () => { setUserLocation(undefined) });
     }
   });
 
@@ -121,7 +120,14 @@ const App: React.VFC = () => {
     var userLocationMarker = null
     if (userLocation) {
       focusUserLocationButton = <Button
-        onClick={() => { setCenter(userLocation) }}
+        onClick={() => { setOpenRestaurant(oldOpenRestaurant => {
+          if(oldOpenRestaurant === "userLocation"){
+            return "userLocationFlip";
+          }
+          else{
+            return "userLocation"
+          }
+        }) }}
         style={buttonStyle}>Find My Location</Button>
       userLocationMarker = <UserMarker
         position={userLocation}
@@ -154,9 +160,13 @@ const App: React.VFC = () => {
             <Col sm="6" style={{ "padding": "1vh" }}>
               <Wrapper apiKey={"AIzaSyCXdXiYdIRNAinnF4qF5gu-3NZLhYL0NUU"} render={render}>
                 <Map
-                  center={center}
+                  mapOptions={{
+                    center: londonLatLng,
+                    zoom: 8
+                  }}
                   style={{ "flexGrow": "1", "height": "81vh" }}
-                  zoom={8}>
+                  userPosition={userLocation}
+                  openRestaurant={openRestaurant}>
                   {markers}
                   {userLocationMarker}
                 </Map>
