@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/OffMenuMap.css"],"names":[],"mappings":"AAAA,iBACI,UACJ,CAEA,uBACI,WACJ","file":"main.0a3f75d7.chunk.css","sourcesContent":[".restaurant-name {\r\n    float: left\r\n}\r\n\r\n.restaurant-podcasters {\r\n    float: right\r\n}"]}
