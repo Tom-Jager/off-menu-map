@@ -147,7 +147,7 @@ const App: React.VFC = () => {
     return (
       <ErrorBoundary
         FallbackComponent={ErrorMessage}>
-        <Helmet> <style>{'body { background-color: #fcb345; }'}</style></Helmet>
+        <Helmet> <style>{'body { background-color: #fcb345; }'}</style><title>The Off Menu Map</title></Helmet>
         <Container style={{ "paddingTop": "3vh" }}>
           <Row><h1 style={{"textAlign": "center", "color": "white"}}>THE OFF MENU MAP</h1></Row>
           <Row>
